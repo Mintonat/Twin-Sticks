@@ -7,8 +7,11 @@ public class GameManager : MonoBehaviour {
 
 	public bool recording = true;
 
+	private bool paused = false;
+	private float fixedDeltaTime;
+
 	void Start (){
-		PlayerPrefsManager.UnlockLevel (2);
+		fixedDeltaTime = Time.fixedDeltaTime;
 	}
 	
 	// Update is called once per frame
@@ -18,5 +21,20 @@ public class GameManager : MonoBehaviour {
 		} else {
 			recording = true;
 		}
+		if (CrossPlatformInputManager.GetButtonUp ("Pause") && !paused) {
+			PauseGame ();
+			paused = true;
+		}else if (CrossPlatformInputManager.GetButtonUp ("Pause") && paused) {
+			ResumedGame ();
+			paused = false;
+		}
+	}
+	void PauseGame(){
+		Time.timeScale = 0;
+		Time.fixedDeltaTime = 0;
+	}
+	void ResumedGame(){
+		Time.timeScale = 1f;
+		Time.fixedDeltaTime = fixedDeltaTime;
 	}
 }
